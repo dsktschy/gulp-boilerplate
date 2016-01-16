@@ -37,7 +37,7 @@ gulp.task('css:lint', () => {
 });
 
 /**
- *  Sass
+ *  Sass + Pleeease
  */
 gulp.task('css:bundle', ['css:lint'], (done) => {
   let endCount;
@@ -63,8 +63,17 @@ gulp.task('css:bundle', ['css:lint'], (done) => {
       ? dir.slice(0, -1).split('/').pop() : 'bundle';
     gulp
       .src(entryFile)
+      .pipe($.if(conf.debug, $.sourcemaps.init({loadMaps: true})))
       .pipe($.sass())
-      .pipe($.rename({basename: bundledFileName}))
+      .pipe($.pleeease({
+        autoprefixer: true,
+        rem: true,
+        minifier: true,
+        out: `${bundledFileName}.min.css`
+      }))
+      .pipe($.if(conf.debug, $.sourcemaps.write(conf.sourcemaps.dst, {
+        sourceRoot: conf.sourcemaps.sourceRoot.css
+      })))
       .pipe(gulp.dest(conf.sass.dst))
       .on('end', onEnd);
   }

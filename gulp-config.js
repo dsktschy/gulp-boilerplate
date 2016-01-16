@@ -35,6 +35,11 @@ module.exports = {
   },
   sourcemaps: {
     // bundleファイルを起点とするパス
-    dst: `../${dir.map}`
+    dst: `../${dir.map}`,
+    // ブラウザのインスペクタの表示上mapが格納されるディレクトリ
+    sourceRoot: {
+      // JSはbrowserifyのデフォルト設定を引き継ぐため、CSSもそれに揃えて設定する
+      css: `/source/${dir.src}${dir.css}`
+    }
   }
 };
