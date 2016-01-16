@@ -26,6 +26,17 @@ const
   };
 
 /**
+ *  SassLint
+ */
+gulp.task('css:lint', () => {
+  return gulp
+    .src(conf.sassLint.src)
+    .pipe($.sassLint())
+    .pipe($.sassLint.format())
+    .pipe($.sassLint.failOnError());
+});
+
+/**
  *  ESLint
  */
 gulp.task('js:lint', () => {
