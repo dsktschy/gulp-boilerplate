@@ -14,7 +14,8 @@ module.exports = {
   eslint: {
     src: [
       `${dir.src}${dir.js}**/*.js`,
-      'gulpfile.js'
+      'gulpfile.js',
+      'gulp-config.js'
     ]
   },
   browserify: {
