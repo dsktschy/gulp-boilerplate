@@ -9,6 +9,7 @@ const
   buffer = require('vinyl-buffer'),
   fs = require('fs'),
   conf = require('./gulp-config'),
+  htmlminifierrc = require('./.htmlminifierrc'),
 
   $ = gulpLoadPlugins(),
 
@@ -34,6 +35,18 @@ gulp.task('html:lint', () => {
     .pipe($.htmlhint('.htmlhintrc'))
     .pipe($.htmlhint.reporter())
     .pipe($.htmlhint.failReporter());
+});
+
+/**
+ *  HTMLMinifier
+ *    無効化した場合はsrcのHTMLをそのままdstにコピー
+ *    HTMLのsourcemapは作れなかった
+ */
+gulp.task('html:minify', ['html:lint'], () => {
+  return gulp
+    .src(conf.htmlMinifier.src, {base: conf.htmlMinifier.base})
+    .pipe($.if(conf.htmlMinifier.enable, $.htmlMinifier(htmlminifierrc)))
+    .pipe(gulp.dest(conf.htmlMinifier.dst));
 });
 
 /**

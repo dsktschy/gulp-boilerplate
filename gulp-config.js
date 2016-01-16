@@ -12,7 +12,13 @@ module.exports = {
   debug: process.env.NODE_ENV !== 'production',
   dir,
   htmlhint: {
-    src: [`${dir.dst}**/*.html`]
+    src: [`${dir.src}**/*.html`]
+  },
+  htmlMinifier: {
+    enable: true,
+    base: dir.src,
+    src: [`${dir.src}**/*.html`],
+    dst: `${dir.dst}`
   },
   sassLint: {
     src: [`${dir.src}${dir.css}**/*.scss`]
