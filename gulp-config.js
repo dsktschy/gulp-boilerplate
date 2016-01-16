@@ -11,6 +11,9 @@ const dir = {
 module.exports = {
   debug: process.env.NODE_ENV !== 'production',
   dir,
+  htmlhint: {
+    src: [`${dir.dst}**/*.html`]
+  },
   sassLint: {
     src: [`${dir.src}${dir.css}**/*.scss`]
   },

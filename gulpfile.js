@@ -26,6 +26,17 @@ const
   };
 
 /**
+ *  HTMLHint
+ */
+gulp.task('html:lint', () => {
+  return gulp
+    .src(conf.htmlhint.src)
+    .pipe($.htmlhint('.htmlhintrc'))
+    .pipe($.htmlhint.reporter())
+    .pipe($.htmlhint.failReporter());
+});
+
+/**
  *  SassLint
  */
 gulp.task('css:lint', () => {
