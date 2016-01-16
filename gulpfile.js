@@ -30,10 +30,7 @@ const
  */
 gulp.task('js:lint', () => {
   return gulp
-    .src([
-      `${conf.dir.src}${conf.dir.js}**/*.js`,
-      'gulpfile.js'
-    ])
+    .src(conf.eslint.src)
     .pipe($.eslint())
     .pipe($.eslint.format())
     .pipe($.eslint.failOnError());
@@ -43,12 +40,11 @@ gulp.task('js:lint', () => {
  *  Browserify(Babelify) + Uglify
  */
 gulp.task('js:bundle', ['js:lint'], (done) => {
-  const entryFile = `${conf.dir.src}${conf.dir.js}main.js`;
-  if (!existsSync(entryFile)) {
+  if (!existsSync(conf.browserify.entry)) {
     done();
     return;
   }
-  return browserify(entryFile, {debug: conf.debug})
+  return browserify(conf.browserify.entry, {debug: conf.debug})
     .transform(babelify)
     .bundle()
     .pipe(source('bundle.js'))
@@ -56,8 +52,8 @@ gulp.task('js:bundle', ['js:lint'], (done) => {
     .pipe($.if(conf.debug, $.sourcemaps.init({loadMaps: true})))
     .pipe($.uglify({mangle: !conf.debug}))
     .pipe($.rename({suffix: '.min'}))
-    .pipe($.if(conf.debug, $.sourcemaps.write(`../${conf.dir.map}`)))
-    .pipe(gulp.dest(`${conf.dir.dst}${conf.dir.js}`));
+    .pipe($.if(conf.debug, $.sourcemaps.write(conf.sourcemaps.dst)))
+    .pipe(gulp.dest(conf.browserify.dst));
 });
 
 /**
