@@ -8,9 +8,23 @@ const
   source = require('vinyl-source-stream'),
   buffer = require('vinyl-buffer'),
   del = require('del'),
+  fs = require('fs'),
   conf = require('./gulp-config'),
 
-  $ = gulpLoadPlugins();
+  $ = gulpLoadPlugins(),
+
+  /**
+   *  ファイルが存在するか確認する
+   */
+  existsSync = (path) => {
+    try {
+      fs.accessSync(path);
+    } catch (err) {
+      console.log(`no such file or directory: ${err.path}`);
+      return false;
+    }
+    return true;
+  };
 
 /**
  *  ESLint
@@ -29,8 +43,13 @@ gulp.task('js:lint', () => {
 /**
  *  Browserify(Babelify) + Uglify
  */
-gulp.task('js:bundle', ['js:lint'], () => {
-  browserify(`${conf.dir.src}${conf.dir.js}main.js`, {debug: conf.debug})
+gulp.task('js:bundle', ['js:lint'], (done) => {
+  const entryFile = `${conf.dir.src}${conf.dir.js}main.js`;
+  if (!existsSync(entryFile)) {
+    done();
+    return;
+  }
+  return browserify(entryFile, {debug: conf.debug})
     .transform(babelify)
     .bundle()
     .pipe(source('bundle.js'))
