@@ -19,7 +19,9 @@ module.exports = {
     ]
   },
   browserify: {
-    entry: `${dir.src}${dir.js}main.js`,
+    // エントリーファイルが格納されたディレクトリ。末尾'/'必須
+    // 複数指定することでディレクトリ毎にバンドルファイルを生成可能
+    dir: [`${dir.src}${dir.js}`],
     dst: `${dir.dst}${dir.js}`
   },
   sourcemaps: {
