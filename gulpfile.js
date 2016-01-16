@@ -37,6 +37,40 @@ gulp.task('css:lint', () => {
 });
 
 /**
+ *  Sass
+ */
+gulp.task('css:bundle', ['css:lint'], (done) => {
+  let endCount;
+  const onEnd = () => {
+    endCount++;
+    if (endCount === conf.sass.dir.length) {
+      done();
+    }
+  };
+  if (!conf.sass.dir.length) {
+    done();
+    return;
+  }
+  endCount = 0;
+  for (let dir of conf.sass.dir) {
+    let entryFile, bundledFileName;
+    entryFile = `${dir}main.scss`;
+    if (!existsSync(entryFile)) {
+      onEnd();
+      continue;
+    }
+    bundledFileName = conf.sass.dir.length > 1
+      ? dir.slice(0, -1).split('/').pop() : 'bundle';
+    gulp
+      .src(entryFile)
+      .pipe($.sass())
+      .pipe($.rename({basename: bundledFileName}))
+      .pipe(gulp.dest(conf.sass.dst))
+      .on('end', onEnd);
+  }
+});
+
+/**
  *  ESLint
  */
 gulp.task('js:lint', () => {
@@ -64,19 +98,18 @@ gulp.task('js:bundle', ['js:lint'], (done) => {
   }
   endCount = 0;
   for (let dir of conf.browserify.dir) {
-    let entryFile, bundledFile;
+    let entryFile, bundledFileName;
     entryFile = `${dir}main.js`;
     if (!existsSync(entryFile)) {
       onEnd();
       continue;
     }
-    bundledFile = conf.browserify.dir.length > 1
-      ? `${dir.slice(0, -1).split('/').pop()}.js`
-      : 'bundle.js';
+    bundledFileName = conf.browserify.dir.length > 1
+      ? dir.slice(0, -1).split('/').pop() : 'bundle';
     browserify(entryFile, {debug: conf.debug})
       .transform(babelify)
       .bundle()
-      .pipe(source(bundledFile))
+      .pipe(source(`${bundledFileName}.js`))
       .pipe(buffer())
       .pipe($.if(conf.debug, $.sourcemaps.init({loadMaps: true})))
       .pipe($.uglify({mangle: !conf.debug}))

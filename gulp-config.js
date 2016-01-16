@@ -14,6 +14,12 @@ module.exports = {
   sassLint: {
     src: [`${dir.src}${dir.css}**/*.scss`]
   },
+  sass: {
+    // エントリーファイルが格納されたディレクトリ。末尾'/'必須
+    // 複数指定することでディレクトリ毎にバンドルファイルを生成可能
+    dir: [`${dir.src}${dir.css}`],
+    dst: `${dir.dst}${dir.css}`
+  },
   eslint: {
     src: [
       `${dir.src}${dir.js}**/*.js`,
