@@ -25,7 +25,7 @@ gulp.task('html:lint', () => {
 /**
  *  HTMLMinifier
  *    無効化した場合はsrcのHTMLをそのままdstにコピー
- *    HTMLのsourcemapは作れなかった
+ *    HTMLのsourcemapは作っても認識されなかった
  */
 gulp.task('html:min', ['html:lint'], () => {
   return gulp
