@@ -11,4 +11,4 @@ const gulp = require('gulp');
 /**
  *  デフォルトタスク
  */
-gulp.task('default', () => {});
+gulp.task('default', ['html:min', 'css:min', 'js:min', 'image:min']);
