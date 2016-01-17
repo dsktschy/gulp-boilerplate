@@ -24,7 +24,7 @@ module.exports = {
     enable: true,
     base: dir.src,
     src: [`${dir.src}**/*.html`],
-    dst: `${dir.dst}`
+    dst: dir.dst
   },
   sassLint: {
     src: [`${dir.src}${dir.css}**/*.scss`]
@@ -32,8 +32,8 @@ module.exports = {
   sass: {
     // エントリーファイルが格納されたディレクトリ。末尾'/'必須
     // 複数指定することでディレクトリ毎にバンドルファイルを生成可能
-    dir: [`${dir.src}${dir.css}`],
-    dst: `${dir.dst}${dir.css}`
+    dir: [dir.src + dir.css],
+    dst: dir.dst + dir.css
   },
   eslint: {
     src: [
@@ -45,8 +45,8 @@ module.exports = {
   browserify: {
     // エントリーファイルが格納されたディレクトリ。末尾'/'必須
     // 複数指定することでディレクトリ毎にバンドルファイルを生成可能
-    dir: [`${dir.src}${dir.js}`],
-    dst: `${dir.dst}${dir.js}`
+    dir: [dir.src + dir.js],
+    dst: dir.dst + dir.js
   },
   imagemin: {
     enable: true,
