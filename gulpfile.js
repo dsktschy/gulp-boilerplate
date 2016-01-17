@@ -12,6 +12,7 @@ const
   htmlminifierrc = require('./.htmlminifierrc'),
 
   $ = gulpLoadPlugins(),
+  plumberOpt = {errorHandler: $.notify.onError('Error: <%= error %>')},
 
   /**
    *  ファイルが存在するか確認する
@@ -32,6 +33,7 @@ const
 gulp.task('html:lint', () => {
   return gulp
     .src(conf.htmlhint.src)
+    .pipe($.plumber(plumberOpt))
     .pipe($.htmlhint('.htmlhintrc'))
     .pipe($.htmlhint.reporter())
     .pipe($.htmlhint.failReporter());
@@ -45,6 +47,7 @@ gulp.task('html:lint', () => {
 gulp.task('html:minify', ['html:lint'], () => {
   return gulp
     .src(conf.htmlMinifier.src, {base: conf.htmlMinifier.base})
+    .pipe($.plumber(plumberOpt))
     .pipe($.if(conf.htmlMinifier.enable, $.htmlMinifier(htmlminifierrc)))
     .pipe(gulp.dest(conf.htmlMinifier.dst));
 });
@@ -55,6 +58,7 @@ gulp.task('html:minify', ['html:lint'], () => {
 gulp.task('css:lint', () => {
   return gulp
     .src(conf.sassLint.src)
+    .pipe($.plumber(plumberOpt))
     .pipe($.sassLint())
     .pipe($.sassLint.format())
     .pipe($.sassLint.failOnError());
@@ -87,6 +91,7 @@ gulp.task('css:bundle', ['css:lint'], (done) => {
       ? dir.slice(0, -1).split('/').pop() : 'bundle';
     gulp
       .src(entryFile)
+      .pipe($.plumber(plumberOpt))
       .pipe($.if(conf.debug, $.sourcemaps.init({loadMaps: true})))
       .pipe($.sass())
       .pipe($.pleeease({
@@ -109,6 +114,7 @@ gulp.task('css:bundle', ['css:lint'], (done) => {
 gulp.task('js:lint', () => {
   return gulp
     .src(conf.eslint.src)
+    .pipe($.plumber(plumberOpt))
     .pipe($.eslint())
     .pipe($.eslint.format())
     .pipe($.eslint.failOnError());
@@ -119,12 +125,20 @@ gulp.task('js:lint', () => {
  */
 gulp.task('js:bundle', ['js:lint'], (done) => {
   let endCount;
-  const onEnd = () => {
-    endCount++;
-    if (endCount === conf.browserify.dir.length) {
-      done();
-    }
-  };
+  const
+    onError = (errorObject) => {
+      $.notify.onError(errorObject.toString().split(': ').join(':\n'))
+        .apply(this, arguments);
+      if (typeof this.emit === 'function') {
+        this.emit('end');
+      }
+    },
+    onEnd = () => {
+      endCount++;
+      if (endCount === conf.browserify.dir.length) {
+        done();
+      }
+    };
   if (!conf.browserify.dir.length) {
     done();
     return;
@@ -142,6 +156,8 @@ gulp.task('js:bundle', ['js:lint'], (done) => {
     browserify(entryFile, {debug: conf.debug})
       .transform(babelify)
       .bundle()
+      .on('error', onError)
+      .pipe($.plumber(plumberOpt))
       .pipe(source(`${bundledFileName}.js`))
       .pipe(buffer())
       .pipe($.if(conf.debug, $.sourcemaps.init({loadMaps: true})))
