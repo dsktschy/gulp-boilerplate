@@ -6,6 +6,7 @@ const
     dst: 'public/',
     css: 'stylesheets/',
     js: 'javascripts/',
+    img: 'images/',
     map: 'maps/'
   },
   file = {
@@ -47,6 +48,12 @@ module.exports = {
     dir: [`${dir.src}${dir.js}`],
     dst: `${dir.dst}${dir.js}`
   },
+  imagemin: {
+    enable: true,
+    base: dir.src + dir.img,
+    src: [`${dir.src}${dir.img}**/*`],
+    dst: dir.dst + dir.img
+  },
   sourcemaps: {
     // bundleファイルを起点とするパス
     dst: `../${dir.map}`,
@@ -70,7 +77,8 @@ module.exports = {
     target: {
       html: [`${dir.src}**/*.html`],
       css: [`${dir.src}${dir.css}**/*.scss`],
-      js: [`${dir.src}${dir.js}**/*.js`]
+      js: [`${dir.src}${dir.js}**/*.js`],
+      img: [`${dir.src}${dir.img}**/*`]
     }
   }
 };

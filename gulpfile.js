@@ -13,6 +13,7 @@ const
   browserSync = require('browser-sync'),
   conf = require('./gulp-config'),
   htmlminifierrc = require('./.htmlminifierrc'),
+  imageminrc = require('./.imageminrc'),
 
   $ = gulpLoadPlugins(),
   plumberOpt = {errorHandler: $.notify.onError('Error: <%= error %>')},
@@ -190,27 +191,44 @@ gulp.task('js:bundle', ['js:lint'], (done) => {
 });
 
 /**
+ *  ImageMin
+ */
+gulp.task('image:minify', () => {
+  return gulp
+    .src(conf.imagemin.src, {base: conf.imagemin.base})
+    .pipe($.plumber(plumberOpt))
+    .pipe($.if(conf.imagemin.enable, $.imagemin(imageminrc)))
+    .pipe(gulp.dest(conf.imagemin.dst));
+});
+
+/**
  *  それぞれのファイル形式のタスクを一式実行後、リロード
  *    watchから呼ばれるためのタスク。bsInit完了前の単体使用は不可
  */
 gulp.task('html:reload', ['html:minify'], bsReload);
 gulp.task('css:reload', ['css:bundle'], bsReload);
 gulp.task('js:reload', ['js:bundle'], bsReload);
+gulp.task('image:reload', ['image:minify'], bsReload);
 
 /**
  *  それぞれのファイル形式のタスクを一式実行後、監視に入る
  */
-gulp.task('watch', ['html:minify', 'css:bundle', 'js:bundle'], () => {
-  if (existsSync(conf.browserSync.index)) {
-    bsSkip = false;
-    bs.init(conf.browserSync.opt);
-  } else {
-    bsSkip = true;
+gulp.task(
+  'watch',
+  ['html:minify', 'css:bundle', 'js:bundle', 'image:minify'],
+  () => {
+    if (existsSync(conf.browserSync.index)) {
+      bsSkip = false;
+      bs.init(conf.browserSync.opt);
+    } else {
+      bsSkip = true;
+    }
+    gulp.watch(conf.watch.target.html, ['html:reload']);
+    gulp.watch(conf.watch.target.css, ['css:reload']);
+    gulp.watch(conf.watch.target.js, ['js:reload']);
+    gulp.watch(conf.watch.target.img, ['image:reload']);
   }
-  gulp.watch(conf.watch.target.html, ['html:reload']);
-  gulp.watch(conf.watch.target.css, ['css:reload']);
-  gulp.watch(conf.watch.target.js, ['js:reload']);
-});
+);
 
 /**
  *  デフォルトタスク
