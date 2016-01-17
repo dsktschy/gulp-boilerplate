@@ -1,5 +1,7 @@
 'use strict';
 
+let bsSkip;
+
 const
   gulp = require('gulp'),
   gulpLoadPlugins = require('gulp-load-plugins'),
@@ -8,11 +10,13 @@ const
   source = require('vinyl-source-stream'),
   buffer = require('vinyl-buffer'),
   fs = require('fs'),
+  browserSync = require('browser-sync'),
   conf = require('./gulp-config'),
   htmlminifierrc = require('./.htmlminifierrc'),
 
   $ = gulpLoadPlugins(),
   plumberOpt = {errorHandler: $.notify.onError('Error: <%= error %>')},
+  bs = browserSync.create(),
 
   /**
    *  ファイルが存在するか確認する
@@ -25,6 +29,18 @@ const
       return false;
     }
     return true;
+  },
+
+  /**
+   *  BrowserSyncリロード
+   *    taskのコールバックにbs.reloadをそのまま渡すとタスクが完了せず
+   *    以降のタスク呼び出しが無効となるため関数で包む
+   */
+  bsReload = () => {
+    if (bsSkip) {
+      return;
+    }
+    bs.reload();
   };
 
 /**
@@ -54,6 +70,8 @@ gulp.task('html:minify', ['html:lint'], () => {
 
 /**
  *  SassLint
+ *    一部watchが停止するケースがある
+ *      @importの@が抜けている場合など
  */
 gulp.task('css:lint', () => {
   return gulp
@@ -122,6 +140,8 @@ gulp.task('js:lint', () => {
 
 /**
  *  Browserify(Babelify) + Uglify
+ *    onErrorでthis.emitが実行されない場合はwatchが停止する
+ *      importするモジュールが存在しない場合など
  */
 gulp.task('js:bundle', ['js:lint'], (done) => {
   let endCount;
@@ -167,6 +187,29 @@ gulp.task('js:bundle', ['js:lint'], (done) => {
       .pipe(gulp.dest(conf.browserify.dst))
       .on('end', onEnd);
   }
+});
+
+/**
+ *  それぞれのファイル形式のタスクを一式実行後、リロード
+ *    watchから呼ばれるためのタスク。bsInit完了前の単体使用は不可
+ */
+gulp.task('html:reload', ['html:minify'], bsReload);
+gulp.task('css:reload', ['css:bundle'], bsReload);
+gulp.task('js:reload', ['js:bundle'], bsReload);
+
+/**
+ *  それぞれのファイル形式のタスクを一式実行後、監視に入る
+ */
+gulp.task('watch', ['html:minify', 'css:bundle', 'js:bundle'], () => {
+  if (existsSync(conf.browserSync.index)) {
+    bsSkip = false;
+    bs.init(conf.browserSync.opt);
+  } else {
+    bsSkip = true;
+  }
+  gulp.watch(conf.watch.target.html, ['html:reload']);
+  gulp.watch(conf.watch.target.css, ['css:reload']);
+  gulp.watch(conf.watch.target.js, ['js:reload']);
 });
 
 /**

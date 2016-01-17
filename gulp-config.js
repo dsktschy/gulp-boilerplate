@@ -1,16 +1,21 @@
 'use strict';
 
-const dir = {
-  src: 'src/',
-  dst: 'public/',
-  css: 'stylesheets/',
-  js: 'javascripts/',
-  map: 'maps/'
-};
+const
+  dir = {
+    src: 'src/',
+    dst: 'public/',
+    css: 'stylesheets/',
+    js: 'javascripts/',
+    map: 'maps/'
+  },
+  file = {
+    index: 'index.html'
+  };
 
 module.exports = {
   debug: process.env.NODE_ENV !== 'production',
   dir,
+  file,
   htmlhint: {
     src: [`${dir.src}**/*.html`]
   },
@@ -49,6 +54,23 @@ module.exports = {
     sourceRoot: {
       // JSはbrowserifyのデフォルト設定を引き継ぐため、CSSもそれに揃えて設定する
       css: `/source/${dir.src}${dir.css}`
+    }
+  },
+  browserSync: {
+    index: dir.dst + file.index,
+    opt: {
+      server: {
+        baseDir: dir.dst,
+        index: file.index
+      },
+      open: false
+    }
+  },
+  watch: {
+    target: {
+      html: [`${dir.src}**/*.html`],
+      css: [`${dir.src}${dir.css}**/*.scss`],
+      js: [`${dir.src}${dir.js}**/*.js`]
     }
   }
 };
