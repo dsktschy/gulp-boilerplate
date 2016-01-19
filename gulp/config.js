@@ -10,7 +10,8 @@ const
     map: 'maps/'
   },
   file = {
-    index: 'index.html'
+    index: 'index',
+    entry: 'entry'
   };
 
 module.exports = {
@@ -30,6 +31,7 @@ module.exports = {
     src: [`${dir.src}${dir.css}**/*.scss`]
   },
   sass: {
+    entry: `${file.entry}.scss`,
     // エントリーファイルが格納されたディレクトリ。末尾'/'必須
     // 複数指定することでディレクトリ毎にバンドルファイルを生成可能
     dir: [dir.src + dir.css],
@@ -43,6 +45,7 @@ module.exports = {
     ]
   },
   browserify: {
+    entry: `${file.entry}.js`,
     // エントリーファイルが格納されたディレクトリ。末尾'/'必須
     // 複数指定することでディレクトリ毎にバンドルファイルを生成可能
     dir: [dir.src + dir.js],
@@ -64,11 +67,11 @@ module.exports = {
     }
   },
   browserSync: {
-    index: dir.dst + file.index,
+    index: `${dir.dst}${file.index}.html`,
     opt: {
       server: {
         baseDir: dir.dst,
-        index: file.index
+        index: `${file.index}.html`
       },
       open: false
     }

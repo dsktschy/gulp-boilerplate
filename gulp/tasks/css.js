@@ -41,7 +41,7 @@ gulp.task('css:min', ['css:lint'], (done) => {
   endCount = 0;
   for (let dir of conf.sass.dir) {
     let entryFile, bundledFileName;
-    entryFile = `${dir}main.scss`;
+    entryFile = dir + conf.sass.entry;
     if (!util.existsSync(entryFile)) {
       onEnd();
       continue;

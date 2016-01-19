@@ -53,7 +53,7 @@ gulp.task('js:min', ['js:lint'], (done) => {
   endCount = 0;
   for (let dir of conf.browserify.dir) {
     let entryFile, bundledFileName;
-    entryFile = `${dir}main.js`;
+    entryFile = dir + conf.browserify.entry;
     if (!util.existsSync(entryFile)) {
       onEnd();
       continue;
