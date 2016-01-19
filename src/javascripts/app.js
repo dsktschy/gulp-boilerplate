@@ -1,16 +1,13 @@
 import componentA from './component-a';
 import componentB from './component-b';
 
-let elCache;
-
 const
   name = 'app',
   html = `<div id="${name}" class="${name}"></div>`,
+  elCache = {},
 
   setElCache = () => {
-    elCache = {
-      self: document.getElementById(`${name}`)
-    };
+    elCache.self = document.getElementById(`${name}`);
   },
 
   init = (wrapper) => {
