@@ -7,7 +7,7 @@ const
   elCache = {},
 
   setElCache = () => {
-    elCache.self = document.getElementById(`${name}`);
+    elCache.self = document.getElementById(name);
   },
 
   init = (wrapper) => {
