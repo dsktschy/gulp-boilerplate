@@ -1,4 +1,7 @@
 .component-b {
-  $color: #dcdcdc;
-  color: $color;
+
+  h1 {
+    $color: #dcdcdc;
+    color: $color;
+  }
 }

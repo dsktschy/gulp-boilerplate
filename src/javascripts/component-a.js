@@ -1,6 +1,10 @@
 const
   name = 'component-a',
-  html = `<div id="${name}" class="${name}">${name}</div>`,
+  html = `
+    <div id="${name}" class="${name}">
+      <h1>${name}</h1>
+    </div>
+  `,
 
   init = (wrapper) => {
     wrapper.insertAdjacentHTML('beforeend', html);

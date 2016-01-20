@@ -1,4 +1,7 @@
 .component-a {
-  $color: #a9a9a9;
-  color: $color;
+
+  h1 {
+    $color: #a9a9a9;
+    color: $color;
+  }
 }
