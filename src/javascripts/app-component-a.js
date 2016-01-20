@@ -1,5 +1,5 @@
 const
-  name = 'component-a',
+  name = 'app-component-a',
   html = `
     <div id="${name}" class="${name}">
       <h1>${name}</h1>

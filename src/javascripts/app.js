@@ -1,5 +1,5 @@
-import componentA from './component-a';
-import componentB from './component-b';
+import appComponentA from './app-component-a';
+import appComponentB from './app-component-b';
 
 const
   name = 'app',
@@ -13,8 +13,8 @@ const
   init = (wrapper) => {
     wrapper.insertAdjacentHTML('afterbegin', html);
     setElCache();
-    componentA.init(elCache.self);
-    componentB.init(elCache.self);
+    appComponentA.init(elCache.self);
+    appComponentB.init(elCache.self);
   };
 
 export default {
