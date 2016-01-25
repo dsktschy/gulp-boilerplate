@@ -4,6 +4,7 @@ const
   dir = {
     src: 'src/',
     dst: 'public/',
+    gulp: 'gulp/',
     css: 'stylesheets/',
     js: 'javascripts/',
     img: 'images/',
@@ -41,7 +42,7 @@ module.exports = {
     src: [
       `${dir.src}${dir.js}**/*.js`,
       'gulpfile.js',
-      'gulp-config.js'
+      `${dir.gulp}**/*.js`
     ]
   },
   browserify: {
