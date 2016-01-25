@@ -58,6 +58,11 @@ module.exports = {
     src: [`${dir.src}${dir.img}**/*`],
     dst: dir.dst + dir.img
   },
+  copy: {
+    base: dir.src,
+    src: [],
+    dst: dir.dst
+  },
   sourcemaps: {
     // bundleファイルを起点とするパス
     dst: `../${dir.map}`,
@@ -82,7 +87,8 @@ module.exports = {
       html: [`${dir.src}**/*.html`],
       css: [`${dir.src}${dir.css}**/*.scss`],
       js: [`${dir.src}${dir.js}**/*.js`],
-      img: [`${dir.src}${dir.img}**/*`]
+      img: [`${dir.src}${dir.img}**/*`],
+      etc: []
     }
   }
 };
