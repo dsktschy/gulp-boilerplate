@@ -60,7 +60,7 @@ module.exports = {
   },
   copy: {
     base: dir.src,
-    src: [],
+    src: [`${dir.src}favicon.ico`],
     dst: dir.dst
   },
   sourcemaps: {
@@ -88,7 +88,7 @@ module.exports = {
       css: [`${dir.src}${dir.css}**/*.scss`],
       js: [`${dir.src}${dir.js}**/*.js`],
       img: [`${dir.src}${dir.img}**/*`],
-      etc: []
+      etc: [`${dir.src}favicon.ico`]
     }
   }
 };
