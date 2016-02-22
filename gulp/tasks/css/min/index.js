@@ -3,25 +3,11 @@
 const
   gulp = require('gulp'),
   gulpLoadPlugins = require('gulp-load-plugins'),
-  conf = require('../config'),
-  util = require('../util'),
+  conf = require('../../../config'),
+  util = require('../../../util'),
 
   $ = gulpLoadPlugins(),
   plumberOpt = {errorHandler: $.notify.onError('Error: <%= error %>')};
-
-/**
- *  SassLint
- *    一部watchが停止するケースがある
- *      @importの@が抜けている場合など
- */
-gulp.task('css:lint', () => {
-  return gulp
-    .src(conf.sassLint.src)
-    .pipe($.plumber(plumberOpt))
-    .pipe($.sassLint())
-    .pipe($.sassLint.format())
-    .pipe($.sassLint.failOnError());
-});
 
 /**
  *  Sass + Pleeease
@@ -66,9 +52,3 @@ gulp.task('css:min', ['css:lint'], (done) => {
       .on('end', onEnd);
   }
 });
-
-/**
- *  CSSタスクを一式実行後、リロード
- *    watchから呼ばれるためのタスク。bsInit完了前の単体使用は不可
- */
-gulp.task('css:reload', ['css:min'], util.bsReload);

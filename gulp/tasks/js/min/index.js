@@ -7,23 +7,11 @@ const
   babelify = require('babelify'),
   source = require('vinyl-source-stream'),
   buffer = require('vinyl-buffer'),
-  conf = require('../config'),
-  util = require('../util'),
+  conf = require('../../../config'),
+  util = require('../../../util'),
 
   $ = gulpLoadPlugins(),
   plumberOpt = {errorHandler: $.notify.onError('Error: <%= error %>')};
-
-/**
- *  ESLint
- */
-gulp.task('js:lint', () => {
-  return gulp
-    .src(conf.eslint.src)
-    .pipe($.plumber(plumberOpt))
-    .pipe($.eslint())
-    .pipe($.eslint.format())
-    .pipe($.eslint.failOnError());
-});
 
 /**
  *  Browserify(Babelify) + Uglify
@@ -75,9 +63,3 @@ gulp.task('js:min', ['js:lint'], (done) => {
       .on('end', onEnd);
   }
 });
-
-/**
- *  JSタスクを一式実行後、リロード
- *    watchから呼ばれるためのタスク。bsInit完了前の単体使用は不可
- */
-gulp.task('js:reload', ['js:min'], util.bsReload);

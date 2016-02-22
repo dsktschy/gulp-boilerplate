@@ -3,9 +3,8 @@
 const
   gulp = require('gulp'),
   gulpLoadPlugins = require('gulp-load-plugins'),
-  conf = require('../config'),
-  util = require('../util'),
-  imageminrc = require('../../.imageminrc'),
+  conf = require('../../../config'),
+  imageminrc = require('../../../../.imageminrc'),
 
   $ = gulpLoadPlugins(),
   plumberOpt = {errorHandler: $.notify.onError('Error: <%= error %>')};
@@ -20,9 +19,3 @@ gulp.task('image:min', () => {
     .pipe($.if(conf.imagemin.enable, $.imagemin(imageminrc)))
     .pipe(gulp.dest(conf.imagemin.dst));
 });
-
-/**
- *  Imageタスクを一式実行後、リロード
- *    watchから呼ばれるためのタスク。bsInit完了前の単体使用は不可
- */
-gulp.task('image:reload', ['image:min'], util.bsReload);

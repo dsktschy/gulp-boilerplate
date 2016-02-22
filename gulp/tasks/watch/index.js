@@ -2,13 +2,13 @@
 
 const
   gulp = require('gulp'),
-  conf = require('../config'),
-  util = require('../util');
+  conf = require('../../config'),
+  util = require('../../util');
 
 /**
  *  それぞれのファイル形式のタスクを一式実行後、監視に入る
  */
-gulp.task('watch', ['html:min', 'css:min', 'js:min', 'image:min', 'etc:copy'], () => {
+gulp.task('watch', ['html', 'css', 'js', 'image', 'etc'], () => {
   util.bsInit();
   gulp.watch(conf.watch.target.html, ['html:reload']);
   gulp.watch(conf.watch.target.css, ['css:reload']);

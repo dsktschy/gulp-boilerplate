@@ -5,7 +5,7 @@ let bsSkip;
 const
   fs = require('fs'),
   browserSync = require('browser-sync'),
-  conf = require('./config'),
+  conf = require('../config'),
 
   bs = browserSync.create(),
 

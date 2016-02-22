@@ -3,8 +3,7 @@
 const
   gulp = require('gulp'),
   gulpLoadPlugins = require('gulp-load-plugins'),
-  conf = require('../config'),
-  util = require('../util'),
+  conf = require('../../../config'),
 
   $ = gulpLoadPlugins(),
   plumberOpt = {errorHandler: $.notify.onError('Error: <%= error %>')};
@@ -18,9 +17,3 @@ gulp.task('etc:copy', () => {
     .pipe($.plumber(plumberOpt))
     .pipe(gulp.dest(conf.copy.dst));
 });
-
-/**
- *  コピー実行後、リロード
- *    watchから呼ばれるためのタスク。bsInit完了前の単体使用は不可
- */
-gulp.task('etc:reload', ['etc:copy'], util.bsReload);
