@@ -1,5 +1,5 @@
-import appComponentA from './app-component-a';
-import appComponentB from './app-component-b';
+import appComponentA from './components/a';
+import appComponentB from './components/b';
 
 const
   name = 'app',
